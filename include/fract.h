@@ -58,18 +58,24 @@ typedef struct s_cplane
  * @param width Screen space width.
  * @param height Screen space height.
  * @param plane the complex plane to map to/from.
- * @param data extra data for use in get_depth.
  * @param get_depth function to get the depth of a given point.
+ * @param data extra data for use in get_depth.
+ * @param del function to free data if needed (leave as null if not needed);
  */
 typedef struct s_fract
 {
 	size_t		width;
 	size_t		height;
 	t_cplane	*plane;
-	void		*data;
 	size_t		(*get_depth)(const t_complex *, const size_t, const void *);
+	void		*data;
+	void		(*del)(void *);
 }	t_fract;
 
+/**
+ * @brief Fract cleanup function.
+ */
+void		destory_fract(t_fract *fract);
 
 t_complex	*create_complex(float real, float imag);
 
@@ -140,9 +146,21 @@ typedef struct s_sim
 	mlx_t	*mlx;
 	t_fract	*current_fract;
 	t_img	*canvas;
+	t_img	*pre_img;
+	int32_t	pos[2];
+	int32_t	iter[2];
 	float	redraw;
 	float	scale;
+	float	tempscale;
+	int		draw_steps;
+	int		canvas_scaled;
+	float	current_depth;
 }	t_sim;
+
+/**
+ * @brief simuation cleanup func.
+ */
+void	destory_sim(t_sim *sim);
 
 void	draw_fract(void *data);
 
@@ -151,6 +169,14 @@ void	draw_fract(void *data);
  * @brief Scrolling function to scroll through
  * 	the fractal at mouse pos.
  */
-void scroll_through(double xdelta, double ydelta, void *param);
+void	scroll_through(double xdelta, double ydelta, void *param);
+
+void	need_redraw(t_sim *sim);
+
+void	redraw_scaled_image(t_img *canvas, t_sim *sim);
+
+void	draw_pixel_fr(t_sim *sim, t_img *img, int32_t x, int32_t y);
+
+void	redraw_hook(void *param);
 
 #endif

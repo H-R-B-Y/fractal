@@ -67,5 +67,6 @@ t_fract	*create_fract(int screen[2],
 	p->get_depth = fn;
 	p->data = data;
 	p->plane = plane;
+	p->del = 0;
 	return (p);
 }
