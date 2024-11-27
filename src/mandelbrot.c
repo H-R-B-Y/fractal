@@ -22,7 +22,7 @@ sqrt((z.real ^ 2) + (z.imag ^ 2))
 escape clause can be reduced to
 (z.real ^ 2) + (z.imag ^ 2) < 4 
 */
-size_t	mandelrot(const t_complex *c,
+size_t	mandelrot(t_complex *c,
 	const size_t max_depth,
 	const void *data)
 {

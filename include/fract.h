@@ -16,6 +16,15 @@
 # include "libft.h"
 # include "MLX42.h"
 
+# include <math.h>
+# include <pthread.h>
+
+# ifndef NUM_THREADS
+#  define NUM_THREADS 11
+# endif
+
+# define MY_PI 3.14159265358979323846
+
 /**
  * just call it a f'n image m8
  */
@@ -37,6 +46,13 @@ typedef struct s_complex
 	_Float64x	real;
 	_Float64x	imag;
 }	t_complex;
+
+t_complex complex_mul(t_complex a, t_complex b);
+
+t_complex complex_add(t_complex a, t_complex b);
+
+t_complex complex_scale(t_complex z, double scale);
+
 
 /**
  * @brief a complex plane
@@ -67,7 +83,8 @@ typedef struct s_fract
 	size_t		width;
 	size_t		height;
 	t_cplane	*plane;
-	size_t		(*get_depth)(const t_complex *, const size_t, const void *);
+	float		max_depth;
+	size_t		(*get_depth)(t_complex *, const size_t, const void *);
 	void		*data;
 	void		(*del)(void *);
 }	t_fract;
@@ -85,7 +102,7 @@ t_complex	*create_complex(float real, float imag);
  * @param col screenspace x coordinate
  * @param row screenspace y coordinate
  */
-t_complex	*map_to_complex(const t_fract *fract, int col, int row);
+t_complex	map_to_complex(const t_fract *fract, int col, int row);
 
 /**
  * @brief get depth for mandelbrot set.
@@ -97,7 +114,7 @@ t_complex	*map_to_complex(const t_fract *fract, int col, int row);
  * until either an escape condition is met or the iterations (n) meets
  * max_depth. Where z starts at 0 and C is the point in complex space.
  */
-size_t		mandelrot(const t_complex *c, const size_t max_depth, const void *data);
+size_t		mandelrot(t_complex *c, const size_t max_depth, const void *data);
 
 /**
  * @brief get depth for julia set.
@@ -110,7 +127,7 @@ size_t		mandelrot(const t_complex *c, const size_t max_depth, const void *data);
  * is a fixed value, z[n + 1] = z[n]^2 + c can be applied
  * again until max_depth or the escape condition is met.
  */
-size_t		julia(const t_complex *z, const size_t max_depth, const void *c);
+size_t		julia(t_complex *z, const size_t max_depth, const void *c);
 
 /**
  * @brief Creates a cplane of given size.
@@ -124,7 +141,7 @@ t_cplane	*create_cplane(_Float64x x_min, _Float64x x_max,
  * @returns __Memory allocated__ cplane.
  */
 t_fract		*create_fract(int screen[2], t_cplane *plane,
-				size_t (*fn)(const t_complex *, const size_t, const void *),
+				size_t (*fn)(t_complex *, const size_t, const void *),
 				void *data);
 
 //  ██████  ██████  ███████ ██   ██ 
@@ -145,16 +162,14 @@ typedef struct s_sim
 {
 	mlx_t	*mlx;
 	t_fract	*current_fract;
+	float	*depth;
 	t_img	*canvas;
-	t_img	*pre_img;
 	int32_t	pos[2];
 	int32_t	iter[2];
-	float	redraw;
 	float	scale;
-	float	tempscale;
-	int		draw_steps;
-	int		canvas_scaled;
-	float	current_depth;
+	int		recalc;
+	int		redraw;
+	int		*depth_array;
 }	t_sim;
 
 /**
@@ -178,5 +193,40 @@ void	redraw_scaled_image(t_img *canvas, t_sim *sim);
 void	draw_pixel_fr(t_sim *sim, t_img *img, int32_t x, int32_t y);
 
 void	redraw_hook(void *param);
+
+
+// ███    ███ ██    ██ ██      ████████ ██ 
+// ████  ████ ██    ██ ██         ██    ██ 
+// ██ ████ ██ ██    ██ ██         ██    ██ 
+// ██  ██  ██ ██    ██ ██         ██    ██ 
+// ██      ██  ██████  ███████    ██    ██ 
+
+typedef struct
+{
+	t_fract	*fract;
+	int		offset;
+	int		count;
+	int		*data;
+}	t_thread_data;
+
+void	process_frame(int *data, t_fract *f, t_sim *sim);
+
+void	draw_depth_map(t_sim *sim);
+
+// ███████ ██████   ██████   ██████  ██   ██ ██    ██ 
+// ██      ██   ██ ██    ██ ██    ██ ██  ██   ██  ██  
+// ███████ ██████  ██    ██ ██    ██ █████     ████   
+//      ██ ██      ██    ██ ██    ██ ██  ██     ██    
+// ███████ ██       ██████   ██████  ██   ██    ██    
+
+typedef struct s_polynomial {
+	t_complex	(*polynomial)(t_complex *z);    // Function for P(z)
+	t_complex	(*derivative)(t_complex *z);    // Function for P'(z)
+	t_complex	*roots;
+	int			root_count;
+} t_polynomial;
+
+
+size_t newton_depth(t_complex *c, size_t max_depth, const void *data);
 
 #endif

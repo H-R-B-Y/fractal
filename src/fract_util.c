@@ -22,15 +22,14 @@ t_complex	*create_complex(float real, float imag)
 	return (out);
 }
 
-t_complex	*map_to_complex(const t_fract *fract, int col, int row)
+t_complex	map_to_complex(const t_fract *fract, int col, int row)
 {
-	t_complex	*result;
+	t_complex	result;
 
-	result = zeroit(malloc(sizeof(t_complex)), sizeof(t_complex));
-	result->real = fract->plane->x_min
+	result.real = fract->plane->x_min
 		+ (fract->plane->x_max - fract->plane->x_min)
 			* col / (fract->width - 1);
-	result->imag = fract->plane->y_min
+	result.imag = fract->plane->y_min
 		+ (fract->plane->y_max - fract->plane->y_min)
 			* row / (fract->height - 1);
 	return (result);
@@ -54,7 +53,7 @@ t_cplane	*create_cplane(_Float64x	x_min,
 
 t_fract	*create_fract(int screen[2],
 	t_cplane *plane,
-	size_t (*fn)(const t_complex *, const size_t, const void *),
+	size_t (*fn)(t_complex *, const size_t, const void *),
 	void *data)
 {
 	t_fract	*p;
@@ -68,5 +67,6 @@ t_fract	*create_fract(int screen[2],
 	p->data = data;
 	p->plane = plane;
 	p->del = 0;
+	p->max_depth = 50;
 	return (p);
 }

@@ -12,7 +12,7 @@
 
 #include "../include/fract.h"
 
-size_t		julia(const t_complex *st,
+size_t		julia(t_complex *st,
 	const size_t max_depth,
 	const void *constant)
 {

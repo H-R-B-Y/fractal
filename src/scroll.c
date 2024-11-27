@@ -15,25 +15,23 @@
 void scroll_through(double xdelta, double ydelta, void *param)
 {
 	t_sim		*sim;
-	t_complex	*c;
+	t_complex	c;
+	float		scale;
 
 	sim = param;
 	mlx_get_mouse_pos(sim->mlx, &(sim->pos[0]), &(sim->pos[1]));
 	if (sim->pos[0] < 0 || sim->pos[0] >= sim->canvas->width
 		||sim->pos[1] < 0 || sim->pos[1] >= sim->canvas->height)
 		return ;
-	sim->tempscale = 0.9 + 0.2 * (ydelta > 0);
+	scale = 0.9 + 0.2 * (ydelta > 0);
 	c = map_to_complex(sim->current_fract, sim->pos[0], sim->pos[1]);
-	sim->current_fract->plane->x_max = c->real
-		+ (sim->current_fract->plane->x_max - c->real) * sim->tempscale;
-	sim->current_fract->plane->x_min = c->real
-		+ (sim->current_fract->plane->x_min - c->real) * sim->tempscale;
-	sim->current_fract->plane->y_max = c->imag
-		+ (sim->current_fract->plane->y_max - c->imag) * sim->tempscale;
-	sim->current_fract->plane->y_min = c->imag
-		+ (sim->current_fract->plane->y_min - c->imag) * sim->tempscale;
-	sim->scale *= sim->tempscale;
-	sim->redraw += 1;
-	need_redraw(sim);
-	free(c);
+	sim->current_fract->plane->x_max = c.real
+		+ (sim->current_fract->plane->x_max - c.real) * scale;
+	sim->current_fract->plane->x_min = c.real
+		+ (sim->current_fract->plane->x_min - c.real) * scale;
+	sim->current_fract->plane->y_max = c.imag
+		+ (sim->current_fract->plane->y_max - c.imag) * scale;
+	sim->current_fract->plane->y_min = c.imag
+		+ (sim->current_fract->plane->y_min - c.imag) * scale;
+	sim->recalc = 1;
 }

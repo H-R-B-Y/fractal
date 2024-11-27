@@ -1,39 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cleanup.c                                          :+:      :+:    :+:   */
+/*   complex_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hbreeze <hbreeze@student.42.fr>            #+#  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024-11-20 14:18:53 by hbreeze           #+#    #+#             */
-/*   Updated: 2024-11-20 14:18:53 by hbreeze          ###   ########.fr       */
+/*   Created: 2024-11-20 21:58:15 by hbreeze           #+#    #+#             */
+/*   Updated: 2024-11-20 21:58:15 by hbreeze          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/fract.h"
 
-void	destory_fract(t_fract *fract)
+t_complex complex_mul(t_complex a, t_complex b)
 {
-	if (!fract)
-		return ;
-	if (fract->plane)
-		free(fract->plane);
-	if (fract->del)
-		fract->del(fract->data);
-	free(fract);
+	return ((t_complex){
+		.real = a.real * b.real - a.imag * b.imag,
+		.imag = a.real * b.imag + a.imag * b.real
+	});
 }
 
-void	destory_sim(t_sim *sim)
+t_complex complex_add(t_complex a, t_complex b)
 {
-	if (!sim)
-		return ;
-	if (sim->canvas)
-		mlx_delete_image(sim->mlx, sim->canvas);
-	if (sim->current_fract)
-		destory_fract(sim->current_fract);
-	if (sim->mlx)
-		mlx_terminate(sim->mlx);
-	if (sim->depth_array)
-		free(sim->depth_array);
-	free(sim);
+	return ((t_complex){
+		.real = a.real + b.real,
+		.imag = a.imag + b.imag
+	});
 }
+
+t_complex complex_scale(t_complex z, double scale)
+{
+	return ((t_complex){
+		.real = z.real * scale,
+		.imag = z.imag * scale
+	});
+}
+
