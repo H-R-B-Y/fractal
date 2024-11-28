@@ -11,63 +11,14 @@
 /* ************************************************************************** */
 
 #include "../include/fract.h"
-#include <math.h>
 
-void	temp_draw(t_sim *sim, t_img *img, t_fract *f)
+void	need_redraw(t_sim *sim)
 {
-	size_t		iter[2];
-	t_complex	*complex;
-	size_t		depth;
-	const uint32_t colors[] = {
-		0xFF0000FF, // Red
-		0x00FF00FF, // Green
-		0x0000FFFF, // Blue
-		0xFFFF00FF, // Yellow
-		0x000000FF, // Black
-		0xFF00FFFF, // Magenta
-		0x00FFFFFF, // Cyan
-		0xFFFFFFFF // White
-	};
-	float	md;
-
-	iter[0] = 0;
-	md = 50 + 10 * log10(1.0 / sim->scale);
-	while (iter[0] < img->height)
-	{
-		iter[1] = 0;
-		while (iter[1] < img->width)
-		{
-			complex = map_to_complex(f, iter[1], iter[0]);
-			depth = f->get_depth(complex, md, f->data);
-			free(complex);
-			if (depth + 1 < md)
-				mlx_put_pixel(img, iter[1], iter[0], 
-			colors[depth % 8]);
-			else if (depth + 1 >= md)
-				mlx_put_pixel(img, iter[1], iter[0], 
-			colors[4]);
-			iter[1]++;
-		}
-		iter[0]++;
-	}
-	if (!img || !f)
-		return ;
+	sim->redraw = 1;
+	sim->iter[0] = 0;
+	sim->iter[1] = 0;
 }
 
-void	needs_redraw(void *param)
-{
-	t_sim	*sim;
-
-	sim = param;
-	if (sim->redraw > 0)
-		sim->redraw -= sim->mlx->delta_time;
-	if (sim->redraw < 0)
-	{
-		temp_draw(sim, sim->canvas, sim->current_fract);
-		sim->redraw = 0;
-	}
-}
-size_t newton_depth(const t_complex *c, size_t max_depth, const void *data);
 int	main(int argc, char **argv)
 {
 	t_sim	*sim;
@@ -78,13 +29,14 @@ int	main(int argc, char **argv)
 	mlx_image_to_window(sim->mlx, sim->canvas, 0, 0);
 	sim->scale = 1;
 	sim->draw_steps = 500000;
+	sim->current_depth = 50;
 	sim->current_fract = fract_select(argc - 1, &argv[1]);
 	if (!sim->current_fract || !sim->current_fract->plane || !sim->canvas)
 		return (destory_sim(sim), 1);
-	temp_draw(sim, sim->canvas, sim->current_fract);
+	need_redraw(sim);
 	mlx_scroll_hook(sim->mlx, scroll_through, sim);
 	mlx_loop_hook(sim->mlx, redraw_hook, sim);
-	temp_draw(sim, sim->canvas, sim->current_fract);
+	mlx_mouse_hook(sim->mlx, click_hook, sim);
 	mlx_loop(sim->mlx);
 	destory_sim(sim);
 	return (0);

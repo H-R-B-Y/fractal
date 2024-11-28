@@ -25,7 +25,8 @@ SRCS			:= $(SRC_DIR)/fract_util.c \
 				$(SRC_DIR)/newton.c \
 				$(SRC_DIR)/mandelbrot.c \
 				$(SRC_DIR)/strtofloat.c \
-				$(SRC_DIR)/input_handler.c
+				$(SRC_DIR)/input_handler.c \
+				$(SRC_DIR)/mlx_get_pixel.c
 
 OBJS			:= ${SRCS:.c=.o}
 

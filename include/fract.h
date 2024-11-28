@@ -88,7 +88,7 @@ t_complex	*create_complex(float real, float imag);
  * @param col screenspace x coordinate
  * @param row screenspace y coordinate
  */
-t_complex	*map_to_complex(const t_fract *fract, int col, int row);
+t_complex	map_to_complex(const t_fract *fract, int col, int row);
 
 /**
  * @brief get depth for mandelbrot set.
@@ -136,6 +136,12 @@ t_fract		*create_fract(int screen[2], t_cplane *plane,
 // ██    ██ ██   ██ ██       ██ ██  
 //  ██████  ██   ██ ██      ██   ██ 
 
+typedef struct
+{
+	int32_t	start[2];
+	int32_t	end[2];
+}	t_mdata;
+
 /**
  * @brief the main simulation struct.
  * @param mlx the mlx instance.
@@ -149,15 +155,13 @@ typedef struct s_sim
 	mlx_t	*mlx;
 	t_fract	*current_fract;
 	t_img	*canvas;
-	t_img	*pre_img;
 	int32_t	pos[2];
 	int32_t	iter[2];
 	float	redraw;
 	float	scale;
-	float	tempscale;
 	int		draw_steps;
-	int		canvas_scaled;
 	float	current_depth;
+	t_mdata	mos;
 }	t_sim;
 
 /**
@@ -174,12 +178,20 @@ void	draw_fract(void *data);
  */
 void	scroll_through(double xdelta, double ydelta, void *param);
 
+void	click_hook(mouse_key_t button, action_t action,
+			modifier_key_t mods, void *param);
+
+
 void	need_redraw(t_sim *sim);
 
-void	redraw_scaled_image(t_img *canvas, t_sim *sim);
-
+/**
+ * 
+ */
 void	draw_pixel_fr(t_sim *sim, t_img *img, int32_t x, int32_t y);
 
+/**
+ * 
+ */
 void	redraw_hook(void *param);
 
 
@@ -194,5 +206,7 @@ void	redraw_hook(void *param);
 float	strtofloat(const char *str);
 
 t_fract	*fract_select(int argc, char **argv);
+
+uint32_t mlx_get_pixel(mlx_image_t *img, size_t x, size_t y);
 
 #endif

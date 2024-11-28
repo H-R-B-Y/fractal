@@ -22,15 +22,14 @@ t_complex	*create_complex(float real, float imag)
 	return (out);
 }
 
-t_complex	*map_to_complex(const t_fract *fract, int col, int row)
+t_complex	map_to_complex(const t_fract *fract, int col, int row)
 {
-	t_complex	*result;
+	t_complex	result;
 
-	result = zeroit(malloc(sizeof(t_complex)), sizeof(t_complex));
-	result->real = fract->plane->x_min
+	result.real = fract->plane->x_min
 		+ (fract->plane->x_max - fract->plane->x_min)
 			* col / (fract->width - 1);
-	result->imag = fract->plane->y_min
+	result.imag = fract->plane->y_min
 		+ (fract->plane->y_max - fract->plane->y_min)
 			* row / (fract->height - 1);
 	return (result);
