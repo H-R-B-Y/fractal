@@ -150,6 +150,14 @@ t_fract		*create_fract(int screen[2], t_cplane *plane,
 // ██    ██ ██   ██ ██       ██ ██  
 //  ██████  ██   ██ ██      ██   ██ 
 
+
+typedef struct
+{
+	int32_t	start[2];
+	int32_t	end[2];
+}	t_mdata;
+
+
 /**
  * @brief the main simulation struct.
  * @param mlx the mlx instance.
@@ -170,6 +178,7 @@ typedef struct s_sim
 	int		recalc;
 	int		redraw;
 	int		*depth_array;
+	t_mdata	*mos;
 }	t_sim;
 
 /**
@@ -186,11 +195,8 @@ void	draw_fract(void *data);
  */
 void	scroll_through(double xdelta, double ydelta, void *param);
 
-void	need_redraw(t_sim *sim);
-
-void	redraw_scaled_image(t_img *canvas, t_sim *sim);
-
-void	draw_pixel_fr(t_sim *sim, t_img *img, int32_t x, int32_t y);
+void	click_hook(mouse_key_t button, action_t action,
+			modifier_key_t mods, void *param);
 
 void	redraw_hook(void *param);
 

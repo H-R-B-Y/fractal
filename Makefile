@@ -18,7 +18,7 @@ LIBFLAGS		:=  -ldl `pkg-config --libs glfw3` -pthread -lm
 
 SRC_DIR			:= ./src
 SRCS			:= $(SRC_DIR)/fract_util.c \
-				$(SRC_DIR)/scroll.c \
+				$(SRC_DIR)/mousehooks.c \
 				$(SRC_DIR)/cleanup.c \
 				$(SRC_DIR)/complex_utils.c \
 				$(SRC_DIR)/threading.c \

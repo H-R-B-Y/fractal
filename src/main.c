@@ -65,6 +65,7 @@ int	main(int argc, char **argv)
 	sim->scale = 1;
 	sim->depth_array = (int *)malloc(sim->mlx->width * sim->mlx->height * sizeof(int));
 	sim->current_fract = poly4(sim);
+	sim->mos = zeroit(malloc(sizeof(t_mdata)), sizeof(t_mdata));
 	// sim->current_fract = create_fract((int[2]){sim->mlx->width, sim->mlx->height},
 	// 	create_cplane(-2.5f, 2.5f, -2.5f, 2.5f), mandelrot, 0);
 	// sim->current_fract = create_fract((int[2]){sim->mlx->width, sim->mlx->height},
@@ -78,6 +79,7 @@ int	main(int argc, char **argv)
 	temp_draw(sim, sim->canvas, sim->current_fract);
 	mlx_scroll_hook(sim->mlx, scroll_through, sim);
 	mlx_loop_hook(sim->mlx, redraw_hook, sim);
+	mlx_mouse_hook(sim->mlx, click_hook, sim);
 	//temp_draw(sim, sim->canvas, sim->current_fract);
 	process_frame(sim->depth_array, sim->current_fract, sim);
 	mlx_loop(sim->mlx);
