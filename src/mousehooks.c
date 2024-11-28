@@ -11,28 +11,37 @@
 /* ************************************************************************** */
 
 #include "../include/fract.h"
+void	scrdepth(double ydelta, t_sim *sim)
+{
+	sim->current_fract->max_depth += ydelta;
+	sim->recalc = 1;
+}
 
-void scroll_through(double xdelta, double ydelta, void *param)
+void	scroll_through(double xdelta, double ydelta, void *param)
 {
 	t_sim		*sim;
 	t_complex	c;
-	float		scale;
+	double		tempscale;
 
 	sim = param;
+	if (mlx_is_key_down(sim->mlx, MLX_KEY_LEFT_SHIFT)
+		&& (scrdepth(ydelta, sim), 1))
+		return ;
 	mlx_get_mouse_pos(sim->mlx, &(sim->pos[0]), &(sim->pos[1]));
 	if (sim->pos[0] < 0 || sim->pos[0] >= sim->canvas->width
 		||sim->pos[1] < 0 || sim->pos[1] >= sim->canvas->height)
 		return ;
-	scale = 0.9 + 0.2 * (ydelta > 0);
+	tempscale = 0.9 + 0.2 * (ydelta > 0);
 	c = map_to_complex(sim->current_fract, sim->pos[0], sim->pos[1]);
 	sim->current_fract->plane->x_max = c.real
-		+ (sim->current_fract->plane->x_max - c.real) * scale;
+		+ (sim->current_fract->plane->x_max - c.real) * tempscale;
 	sim->current_fract->plane->x_min = c.real
-		+ (sim->current_fract->plane->x_min - c.real) * scale;
+		+ (sim->current_fract->plane->x_min - c.real) * tempscale;
 	sim->current_fract->plane->y_max = c.imag
-		+ (sim->current_fract->plane->y_max - c.imag) * scale;
+		+ (sim->current_fract->plane->y_max - c.imag) * tempscale;
 	sim->current_fract->plane->y_min = c.imag
-		+ (sim->current_fract->plane->y_min - c.imag) * scale;
+		+ (sim->current_fract->plane->y_min - c.imag) * tempscale;
+	sim->scale *= tempscale;
 	sim->recalc = 1;
 }
 

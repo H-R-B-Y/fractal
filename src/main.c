@@ -64,10 +64,10 @@ int	main(int argc, char **argv)
 	mlx_image_to_window(sim->mlx, sim->canvas, 0, 0);
 	sim->scale = 1;
 	sim->depth_array = (int *)malloc(sim->mlx->width * sim->mlx->height * sizeof(int));
-	sim->current_fract = poly4(sim);
+	// sim->current_fract = poly4(sim);
 	sim->mos = zeroit(malloc(sizeof(t_mdata)), sizeof(t_mdata));
-	// sim->current_fract = create_fract((int[2]){sim->mlx->width, sim->mlx->height},
-	// 	create_cplane(-2.5f, 2.5f, -2.5f, 2.5f), mandelrot, 0);
+	sim->current_fract = create_fract((int[2]){sim->mlx->width, sim->mlx->height},
+		create_cplane(-2.5f, 2.5f, -2.5f, 2.5f), mandelrot, 0);
 	// sim->current_fract = create_fract((int[2]){sim->mlx->width, sim->mlx->height},
 	// 	create_cplane(-2.5f, 2.5f, -2.5f, 2.5f), julia, create_complex(-.4 , 0.6f));
 	// sim->current_fract = create_fract((int[2]){sim->mlx->width, sim->mlx->height},
