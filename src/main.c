@@ -73,26 +73,28 @@ int	main(int argc, char **argv)
 	t_sim	*sim;
 
 	sim = zeroit(malloc(sizeof(t_sim)), sizeof(t_sim));
-	sim->mlx = mlx_init(1920, 1080, "Fract", 1);
-	sim->canvas = mlx_new_image(sim->mlx, 1920, 1080);
+	sim->mlx = mlx_init(SCRNWIDTH, SCRNHEIGHT, "fractol", 0);
+	sim->canvas = mlx_new_image(sim->mlx, sim->mlx->width, sim->mlx->height);
 	mlx_image_to_window(sim->mlx, sim->canvas, 0, 0);
 	sim->scale = 1;
 	sim->draw_steps = 500000;
-	// sim->current_fract = create_fract((int[2]){1920, 1080},
-	// 	create_cplane(-2.5f, 2.5f, -2.5f, 2.5f), mandelrot, 0);
-	// sim->current_fract = create_fract((int[2]){1920, 1080},
-	// 	create_cplane(-2.5f, 2.5f, -2.5f, 2.5f), julia, create_complex(-0.8, 0.156f));
-	sim->current_fract = create_fract((int[2]){1920, 1080},
-		create_cplane(-2.5f, 2.5f, -2.5f, 2.5f), newton_depth, (t_complex[3]){{.real = 1.0, .imag = 0.0},
-		{.real = -0.5, .imag = sqrt(3) / 2.0},
-		{.real = -0.5, .imag = -sqrt(3) / 2.0}});
+	sim->current_fract = fract_select(argc - 1, &argv[1]);
 	if (!sim->current_fract || !sim->current_fract->plane || !sim->canvas)
-		return (1);
+		return (destory_sim(sim), 1);
 	temp_draw(sim, sim->canvas, sim->current_fract);
 	mlx_scroll_hook(sim->mlx, scroll_through, sim);
 	mlx_loop_hook(sim->mlx, redraw_hook, sim);
 	temp_draw(sim, sim->canvas, sim->current_fract);
 	mlx_loop(sim->mlx);
-	mlx_terminate(sim->mlx);
+	destory_sim(sim);
 	return (0);
 }
+
+// // sim->current_fract = create_fract((int[2]){1920, 1080},
+// // 	create_cplane(-2.5f, 2.5f, -2.5f, 2.5f), mandelrot, 0);
+// // sim->current_fract = create_fract((int[2]){1920, 1080},
+// // 	create_cplane(-2.5f, 2.5f, -2.5f, 2.5f), julia, create_complex(-0.8, 0.156f));
+// sim->current_fract = create_fract((int[2]){1920, 1080},
+// 	create_cplane(-2.5f, 2.5f, -2.5f, 2.5f), newton_depth, (t_complex[3]){{.real = 1.0, .imag = 0.0},
+// 	{.real = -0.5, .imag = sqrt(3) / 2.0},
+// 	{.real = -0.5, .imag = -sqrt(3) / 2.0}});

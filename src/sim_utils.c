@@ -50,6 +50,8 @@ void redraw_scaled_image(t_img *canvas, t_sim *sim)
 	sim->canvas->instances[0].x = offset_x;
 	sim->canvas->instances[0].y = offset_y;
 
+	// if out of bounds do a swap
+
 	// Mark the canvas as scaled
 	sim->canvas_scaled = 1;
 }

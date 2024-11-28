@@ -16,6 +16,9 @@
 # include "libft.h"
 # include "MLX42.h"
 
+# define SCRNWIDTH 1920
+# define SCRNHEIGHT 1080
+
 /**
  * just call it a f'n image m8
  */
@@ -178,5 +181,18 @@ void	redraw_scaled_image(t_img *canvas, t_sim *sim);
 void	draw_pixel_fr(t_sim *sim, t_img *img, int32_t x, int32_t y);
 
 void	redraw_hook(void *param);
+
+
+// Utils (get ascii text here pls)
+
+/**
+ * @brief str to float.
+ * @param str the string representation of the float.
+ * @returns the float that was represented by the string.
+ * @warning float precision causes this to kinda not be accurate by like 0.1.
+ */
+float	strtofloat(const char *str);
+
+t_fract	*fract_select(int argc, char **argv);
 
 #endif

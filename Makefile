@@ -1,4 +1,4 @@
-NAME			:= fract.out
+NAME			:= fractol
 #CFLAGS			:= -Wextra -Wall -Werror -g3 -O0 -fsanitize=address
 CFLAGS			:= -g3
 
@@ -18,12 +18,14 @@ LIBFLAGS		:=  -ldl `pkg-config --libs glfw3` -pthread -lm
 
 SRC_DIR			:= ./src
 SRCS			:= $(SRC_DIR)/fract_util.c \
-				$(SRC_DIR)/scroll.c \
+				$(SRC_DIR)/mousehooks.c \
 				$(SRC_DIR)/cleanup.c \
 				$(SRC_DIR)/sim_utils.c \
 				$(SRC_DIR)/julia.c \
 				$(SRC_DIR)/newton.c \
-				$(SRC_DIR)/mandelbrot.c 
+				$(SRC_DIR)/mandelbrot.c \
+				$(SRC_DIR)/strtofloat.c \
+				$(SRC_DIR)/input_handler.c
 
 OBJS			:= ${SRCS:.c=.o}
 
@@ -36,9 +38,6 @@ $(LIBFT):
 
 $(LIBMLX):
 		cmake $(LIBMLX_DIR) -B $(LIBMLX_DIR)/build && make CFLAGS="$(CFLAGS)" -C $(LIBMLX_DIR)/build -j4
-
-# $(HB_MATH):
-# 		$(MAKE) --directory $(HB_MATH_DIR) all CFLAGS="$(CFLAGS)"
 
 .c.o:
 		$(CC) $(CFLAGS) -o $@ -c $< $(HEADERS)
