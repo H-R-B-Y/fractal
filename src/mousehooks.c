@@ -64,7 +64,6 @@ void	translate_viewport(t_sim *sim)
 	need_redraw(sim);
 }
 
-#include <stdio.h>
 void	click_hook(mouse_key_t button, action_t action,
 		modifier_key_t mods, void *param)
 {
@@ -83,11 +82,5 @@ void	click_hook(mouse_key_t button, action_t action,
 	{
 		mlx_get_mouse_pos(sim->mlx, &sim->mos.end[0], &sim->mos.end[1]);
 		translate_viewport(sim);
-	}
-	if (button == MLX_MOUSE_BUTTON_RIGHT)
-	{
-		mlx_get_mouse_pos(sim->mlx, &pos[0], &pos[1]);
-		printf("%p\n", (void *)mlx_get_pixel(sim->canvas, pos[0], pos[1]));
-		fflush(stdout);
 	}
 }
