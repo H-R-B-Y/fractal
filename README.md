@@ -1,4 +1,4 @@
-# Fract-ol generating fractals up to the precision limit.
+# Fract-ol: Generating fractals up to the precision limit.
 
 ## Julia fractal at c = 0.5 + 0.2i
 ![Julia fractal where c is 0.5 + 0.2i](static/julia.5.2.png)
