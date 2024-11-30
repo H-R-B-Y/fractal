@@ -1,5 +1,11 @@
 # Fract-ol generating fractals up to the precision limit.
 
+## Julia fractal at c = 0.5 + 0.2i
+![Julia fractal where c is 0.5 + 0.2i](static/julia.5.2.png)
+
+## Mandelbrot set
+![Mandelbrot set](static/mandelbrot.png)
+
 ## Words:
 
 This project is about generating "infinite" fractals (using MLX42), or as infinite as we can get with precision limitations.
@@ -23,3 +29,12 @@ For the Julia set:
 Scroll to zoom at the mouse position (inverted).
 Shift + Scroll to increment/decrement max_depth.
 Click and drag to move around the fractal.
+
+# To Do:
+- Protect inputs.
+- Max depth shouldn't be float (and shouldnt go out of bounds)
+- Input colour values at runtime & different colour modes
+- add newton fractal options
+- add arrow key movement for bonus (even though mouse movement is cooler)
+- i have no idea what "make the colour range shift" means but i guess i'll figure that out.
+- update threaded version with recent changes.
