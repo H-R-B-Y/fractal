@@ -12,6 +12,16 @@
 
 #include "../include/fract.h"
 
+void	ft_deletearray(void **splt)
+{
+	int	index;
+
+	index = 0;
+	while(splt && splt[index])
+		free(splt[index++]);
+	free(splt);
+}
+
 void	destory_fract(t_fract *fract)
 {
 	if (!fract)
@@ -29,9 +39,11 @@ void	destory_sim(t_sim *sim)
 		return ;
 	if (sim->canvas)
 		mlx_delete_image(sim->mlx, sim->canvas);
-	if (sim->current_fract)
-		destory_fract(sim->current_fract);
+	if (sim->fract)
+		destory_fract(sim->fract);
 	if (sim->mlx)
 		mlx_terminate(sim->mlx);
+	if (sim->colours)
+		ft_deletearray((void **)sim->colours);
 	free(sim);
 }

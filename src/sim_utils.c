@@ -16,31 +16,20 @@
 void	draw_pixel_fr(t_sim *sim, t_img *img, int32_t x, int32_t y)
 {
 	t_complex	complex;
+	uint32_t	colour;
 	size_t		depth;
-	const uint32_t colors[] = {
-		0xFF0000FF, // Red
-		0x00FF00FF, // Green
-		0x0000FFFF, // Blue
-		0xFFFF00FF, // Yellow
-		0x000000FF, // Black
-		0xFF00FFFF, // Magenta
-		0x00FFFFFF, // Cyan
-		0xFFFFFFFF // White
-	};
 
-	complex = map_to_complex(sim->current_fract, x, y);
-	depth = sim->current_fract->get_depth(&complex, sim->current_depth,
-		sim->current_fract->data);
-	if (depth + 1 < sim->current_depth)
-		mlx_put_pixel(img, x, y, colors[depth % 8]);
-	else if (depth + 1 >= sim->current_depth)
-		mlx_put_pixel(img, x, y, colors[4]);
+	complex = map_to_complex(sim->fract, x, y);
+	depth = sim->fract->get_depth(&complex, sim->max_depth,
+		sim->fract->data);
+	colour = sim->get_colour(sim, depth);
+	mlx_put_pixel(img, x, y, colour);
 }
 
 void	redraw_hook(void *param)
 {
-	t_sim	*sim;
-	int		iter;
+	t_sim		*sim;
+	uint32_t	iter;
 
 	sim = param;
 	if (!sim || !sim->redraw)
@@ -48,12 +37,12 @@ void	redraw_hook(void *param)
 	iter = 0;
 	while (iter < sim->draw_steps)
 	{
-		if (sim->iter[1] == sim->current_fract->width)
+		if (sim->iter[1] == sim->fract->width)
 		{
 			sim->iter[0]++;
 			sim->iter[1] = 0;
 		}
-		if (sim->iter[0] == sim->current_fract->height)
+		if (sim->iter[0] == sim->fract->height)
 		{
 			sim->redraw = 0;
 			return ;

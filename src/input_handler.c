@@ -37,6 +37,7 @@ t_fract	*create_julia(int argc, char **argv)
 	t_fract	*output;
 	float	input[2];
 
+	(void)argc;
 	input[0] = strtofloat(argv[0]);
 	input[1] = strtofloat(argv[1]);
 	output = create_fract((int[2]){SCRNWIDTH, SCRNHEIGHT},

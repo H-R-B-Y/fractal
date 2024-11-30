@@ -145,23 +145,27 @@ typedef struct
 /**
  * @brief the main simulation struct.
  * @param mlx the mlx instance.
- * @param current_fract the current fractal to draw.
+ * @param fract the current fractal to draw.
  * @param canvas the current image to use
  * @param redraw DEFUNCT
  * @param scale scale (default 1.0)
+ * @param get_colour colour getter
  */
 typedef struct s_sim
 {
-	mlx_t	*mlx;
-	t_fract	*current_fract;
-	t_img	*canvas;
-	int32_t	pos[2];
-	int32_t	iter[2];
-	float	redraw;
-	float	scale;
-	int		draw_steps;
-	float	current_depth;
-	t_mdata	mos;
+	mlx_t		*mlx;
+	t_fract		*fract;
+	t_img		*canvas;
+	int32_t		pos[2];
+	uint32_t	iter[2];
+	t_mdata		mos;
+	uint32_t	**colours;
+	int			col_count;
+	uint32_t	(*get_colour)(struct s_sim *, size_t);
+	uint32_t	draw_steps;
+	int			max_depth;
+	float		redraw;
+	float		scale;
 }	t_sim;
 
 /**
@@ -176,23 +180,24 @@ void	draw_fract(void *data);
  * @brief Scrolling function to scroll through
  * 	the fractal at mouse pos.
  */
-void	scroll_through(double xdelta, double ydelta, void *param);
+void		scroll_through(double xdelta, double ydelta, void *param);
 
-void	click_hook(mouse_key_t button, action_t action,
-			modifier_key_t mods, void *param);
+void		click_hook(mouse_key_t button, action_t action,
+				modifier_key_t mods, void *param);
 
+uint32_t	defaultgetcolour(t_sim *sim, size_t depth);
 
-void	need_redraw(t_sim *sim);
-
-/**
- * 
- */
-void	draw_pixel_fr(t_sim *sim, t_img *img, int32_t x, int32_t y);
+void		need_redraw(t_sim *sim);
 
 /**
  * 
  */
-void	redraw_hook(void *param);
+void		draw_pixel_fr(t_sim *sim, t_img *img, int32_t x, int32_t y);
+
+/**
+ * 
+ */
+void		redraw_hook(void *param);
 
 
 // Utils (get ascii text here pls)
@@ -203,10 +208,22 @@ void	redraw_hook(void *param);
  * @returns the float that was represented by the string.
  * @warning float precision causes this to kinda not be accurate by like 0.1.
  */
-float	strtofloat(const char *str);
+float		strtofloat(const char *str);
 
-t_fract	*fract_select(int argc, char **argv);
+t_fract		*fract_select(int argc, char **argv);
 
-uint32_t mlx_get_pixel(mlx_image_t *img, size_t x, size_t y);
+uint32_t	mlx_get_pixel(mlx_image_t *img, size_t x, size_t y);
+
+// Stuff from HB Math extension
+__uint8_t	rgba_get_red(__uint32_t colour);
+__uint8_t	rgba_get_green(__uint32_t colour);
+__uint8_t	rgba_get_blue(__uint32_t colour);
+__uint8_t	rgba_get_alph(__uint32_t colour);
+float		lerp(float start, float end, float t);
+__uint32_t	colour_rgba(__uint8_t red, __uint8_t green,
+				__uint8_t blue, __uint8_t alpha);
+__uint32_t	lerp_colour(__uint32_t from, __uint32_t too, float t);
+__uint32_t	parse_rgba_str(const char *rgba);
+float		normalize(float from, float too, float t);
 
 #endif

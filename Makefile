@@ -1,6 +1,6 @@
 NAME			:= fractol
-#CFLAGS			:= -Wextra -Wall -Werror -g3 -O0 -fsanitize=address
-CFLAGS			:= -g3
+CFLAGS			:= -Wextra -Wall -Werror -g3 -O0 -fsanitize=address
+# CFLAGS			:= -g3
 
 HEADERS			:= -I ./include
 
@@ -26,7 +26,10 @@ SRCS			:= $(SRC_DIR)/fract_util.c \
 				$(SRC_DIR)/mandelbrot.c \
 				$(SRC_DIR)/strtofloat.c \
 				$(SRC_DIR)/input_handler.c \
-				$(SRC_DIR)/mlx_get_pixel.c
+				$(SRC_DIR)/mlx_get_pixel.c \
+				$(SRC_DIR)/colour_defaults.c \
+				$(SRC_DIR)/colour_get.c \
+				$(SRC_DIR)/colour_math.c
 
 OBJS			:= ${SRCS:.c=.o}
 

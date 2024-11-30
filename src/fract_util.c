@@ -35,10 +35,10 @@ t_complex	map_to_complex(const t_fract *fract, int col, int row)
 	return (result);
 }
 
-t_cplane	*create_cplane(_Float64x	x_min,
-	_Float64x	x_max,
-	_Float64x	y_min,
-	_Float64x	y_max)
+t_cplane	*create_cplane(_Float64x x_min,
+	_Float64x x_max,
+	_Float64x y_min,
+	_Float64x y_max)
 {
 	t_cplane	*p;
 	p = malloc(sizeof(t_cplane));

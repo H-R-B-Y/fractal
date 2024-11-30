@@ -19,6 +19,21 @@ void	need_redraw(t_sim *sim)
 	sim->iter[1] = 0;
 }
 
+uint32_t	**default_colour_array(void)
+{
+	uint32_t	**t;
+
+	t = malloc(3 * sizeof(uint32_t *));
+	if (!t)
+		return (0);
+	t[0] = malloc(sizeof(uint32_t));
+	*t[0] = 0x000000FF;
+	t[1] = malloc(sizeof(uint32_t));
+	*t[1] = 0x20AF20FF;
+	t[2] = 0;
+	return (t);
+}
+
 int	main(int argc, char **argv)
 {
 	t_sim	*sim;
@@ -28,10 +43,12 @@ int	main(int argc, char **argv)
 	sim->canvas = mlx_new_image(sim->mlx, sim->mlx->width, sim->mlx->height);
 	mlx_image_to_window(sim->mlx, sim->canvas, 0, 0);
 	sim->scale = 1;
-	sim->draw_steps = 500000;
-	sim->current_depth = 50;
-	sim->current_fract = fract_select(argc - 1, &argv[1]);
-	if (!sim->current_fract || !sim->current_fract->plane || !sim->canvas)
+	sim->draw_steps = SCRNHEIGHT * SCRNWIDTH;
+	sim->max_depth = 50;
+	sim->fract = fract_select(argc - 1, &argv[1]);
+	sim->colours = default_colour_array();
+	sim->get_colour = defaultgetcolour;
+	if (!sim->fract || !sim->fract->plane || !sim->canvas)
 		return (destory_sim(sim), 1);
 	need_redraw(sim);
 	mlx_scroll_hook(sim->mlx, scroll_through, sim);
@@ -41,12 +58,3 @@ int	main(int argc, char **argv)
 	destory_sim(sim);
 	return (0);
 }
-
-// // sim->current_fract = create_fract((int[2]){1920, 1080},
-// // 	create_cplane(-2.5f, 2.5f, -2.5f, 2.5f), mandelrot, 0);
-// // sim->current_fract = create_fract((int[2]){1920, 1080},
-// // 	create_cplane(-2.5f, 2.5f, -2.5f, 2.5f), julia, create_complex(-0.8, 0.156f));
-// sim->current_fract = create_fract((int[2]){1920, 1080},
-// 	create_cplane(-2.5f, 2.5f, -2.5f, 2.5f), newton_depth, (t_complex[3]){{.real = 1.0, .imag = 0.0},
-// 	{.real = -0.5, .imag = sqrt(3) / 2.0},
-// 	{.real = -0.5, .imag = -sqrt(3) / 2.0}});
