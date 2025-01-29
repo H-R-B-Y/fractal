@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   strtofloat.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbreeze <hbreeze@student.42.fr>            #+#  +:+       +#+        */
+/*   By: hbreeze <hbreeze@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024-11-28 15:58:09 by hbreeze           #+#    #+#             */
-/*   Updated: 2024-11-28 15:58:09 by hbreeze          ###   ########.fr       */
+/*   Created: 2024/11/28 15:58:09 by hbreeze           #+#    #+#             */
+/*   Updated: 2025/01/29 14:25:53 by hbreeze          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,9 @@ float	strtofloat(const char *str)
 	if (!str)
 		return (0.0f);
 	tmp = ft_strdup(str);
-	tmp = ft_strtrim(tmp, " 	f");
+	sep = ft_strtrim(tmp, " 	f");
+	free(tmp);
+	tmp = sep;
 	sep = ft_strchr(tmp, '.');
 	if (!sep)
 		return ((float)ft_atoi(str));
